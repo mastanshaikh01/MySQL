@@ -1,0 +1,110 @@
+1st 10 query
+
+1.List all the columns of the Salespeople table.
+2. List all customers with a rating of 100.
+3. Find all records in the Customer table with NULL values in the city column.
+4. Find the largest order taken by each salesperson on each date.
+5. Arrange the Orders table by descending customer number.
+6. Find which salespeople currently have orders in the Orders table.
+7. List names of all customers matched with the salespeople serving them.
+8. Find the names and numbers of all salespeople who had more than one customer.
+9. Count the orders of each of the salespeople and output the results in descending order.
+10. List the Customer table if and only if one or more of the customers in the Customer table are
+located in San Jose.
+
+1.    select * from salespeople;
+
+******************************************
+
+2.    select * from customers where rating=100;
+
+******************************************
+
+3.     select*from customers  where city is null;
+
+******************************************
+
+4.      select odate , sname , max(amt) 
+	from salespeople s ,oreders o
+	where s.snum=o.snum
+	group by odate , sname ;
+
+******************************************
+
+5.	select *f rom orders order by cnum desc;
+
+******************************************
+
+6. 	Find which salespeople currently have orders in the Orders table.
+
+select s.sname , s.snum
+from salespeople s
+join orders o on s.snum=o.snum;
+
+******************************************
+
+7.    List names of all customers matched with the salespeople serving them.
+ 
+select 
+	c.cname as cust_name,
+	s.sname as salperson_name
+from 
+	customers c
+join
+	 orders o on c.cnum = o.cnum
+join 
+	salespeople s on o.snum=s.snum;
+
+
+******************************************
+
+8. Find the names and numbers of all salespeople who had more than one customer
+
+select s.sname as saleper_name,
+s.snum as saleper_number,
+count(distinct c.cnum) as cust_count
+from salespeople s
+join customers c on s.snum = c.snum
+group by s.sname,s.snum
+having 
+count(distinct c.cnum)>1;
+
+******************************************
+9. Count the orders of each of the salespeople and output the results in descending order.
+
+select 
+	s.sname as salesper_name,
+	s.snum as salesper_number,
+	count(o.onum) as order_count
+from 
+	salespeople s 
+left join 
+	orders o on s.snum = o.snum 
+group by 
+	s.sname , s.snum 
+order by order_count desc;
+
+*****************************************
+10. List the Customer table if and only if one or more of the customers in the Customer table are located in San Jose.
+
+select*
+from customers 
+where exists 
+(
+	select 1 
+	from customers 
+	where city='san jose'
+);
+
+
+
+
+
+
+
+
+
+
+
+
+
